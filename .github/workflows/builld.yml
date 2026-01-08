@@ -1,18 +1,19 @@
-name: KPM Pro Build
-on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install Toolchain
-        run: sudo apt update && sudo apt install -y make gcc-aarch64-linux-gnu
-      - name: Fetch GKI Headers
+      
+      - name: Git Config Safe Directory
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
+      - name: Fetch Kernel Headers
         run: |
-         git clone --depth=1 -b android12-5.10-lts https://android.googlesource.com/kernel/common kernels/5.10
-         make KERNEL_DIR=$GITHUB_WORKSPACE/kernels/5.10
-      - name: Upload
-        uses: actions/upload-artifact@v4
-        with:
-          name: KPM-Pro-Universal
-          path: ./*.ko
+          # Клонируем официальное GKI ядро 5.10
+          git clone --depth=1 -b android12-5.10-lts https://android.googlesource.com/kernel/common kernels/5.10
+
+      - name: Compile KPM Module
+        run: |
+          # Укажите путь к скачанным заголовкам
+          make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- KERNEL_DIR=$GITHUB_WORKSPACE/kernels/5.10
+

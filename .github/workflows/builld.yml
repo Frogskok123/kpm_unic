@@ -9,7 +9,7 @@ jobs:
         run: sudo apt update && sudo apt install -y make gcc-aarch64-linux-gnu
       - name: Build for 5.10 GKI
         run: |
-          git clone --depth=1 https://github.com/kernel-headers/android-5.10 kernels/5.10
+          git clone --depth=1 https://github.com/kernel-headers/android-12-5.10 kernels/5.10
           make KERNEL_DIR=$GITHUB_WORKSPACE/kernels/5.10
       - name: Upload
         uses: actions/upload-artifact@v4
